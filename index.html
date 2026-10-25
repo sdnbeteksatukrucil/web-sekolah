@@ -41,7 +41,7 @@
 <div id="lb" class="hidden fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-2"><img id="lbi" class="max-h-full max-w-full object-contain" style="touch-action:pinch-zoom" alt=""></div>
 <div id="lm" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"><form id="lf" class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-3">
 <div class="flex justify-between"><b class="fh text-xl">Masuk Portal</b><button type="button" id="lx">✕</button></div>
-<input id="u" required placeholder="Username" autocomplete="username" class="w-full border-2 rounded-xl px-3 py-2"><input id="p" type="password" required placeholder="Password" autocomplete="current-password" class="w-full border-2 rounded-xl px-3 py-2">
+<input id="u" required placeholder="Username" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full border-2 rounded-xl px-3 py-2"><input id="p" type="password" required placeholder="Password" autocomplete="new-password" class="w-full border-2 rounded-xl px-3 py-2">
 <p id="le" class="text-sm text-red-600"></p><button class="w-full text-white rounded-xl py-2 font-medium bg-gradient-to-r from-indigo-600 to-pink-500">Masuk</button><p class="text-xs text-slate-400">Admin, Guru, dan Siswa</p></form></div>
 
 <script>
@@ -50,9 +50,13 @@ const e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 const tg=d=>d?new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'';
 const ok=u=>/^https?:\/\//i.test(u||''),COL=['from-sky-400 to-indigo-400','from-pink-400 to-orange-300','from-emerald-400 to-teal-300','from-violet-400 to-fuchsia-400'];
 let L=[];$('#yr').textContent=new Date().getFullYear();
-$('#lg').onclick=async()=>{const {data:{session}}=await sb.auth.getSession();session?location='app.html':$('#lm').classList.remove('hidden')};
+$('#lg').onclick=async()=>{const {data:{session}}=await sb.auth.getSession();session?location='app.html':($('#lf').reset(),$('#lm').classList.remove('hidden'))};
+if(location.search.includes('out=1'))history.replaceState(null,'','index.html');
 $('#lx').onclick=()=>$('#lm').classList.add('hidden');
-$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#le').textContent='';const {error}=await sb.auth.signInWithPassword({email:$('#u').value.trim().toLowerCase()+'@betek1.local',password:$('#p').value});error?$('#le').textContent='Username atau password salah':location='app.html'};
+$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#le').textContent='';const {error}=await sb.auth.signInWithPassword({email:$('#u').value.trim().toLowerCase().replace(/@.*$/,'')+'@betek1.local',password:$('#p').value});
+ if(error){$('#le').textContent=error.message==='Invalid login credentials'?'Username atau password salah (atau akun belum dibuat)':'Gagal masuk: '+error.message;return}
+ const {data:pr}=await sb.from('profiles').select('role').maybeSingle();if(!pr){$('#le').textContent='Akun ada tetapi belum terdaftar sebagai guru/siswa (profil kosong). Hubungi admin.';await sb.auth.signOut();return}
+ location='app.html'};
 const lock=v=>document.body.style.overflow=v?'hidden':'';
 const zoom=u=>{if(!u)return;$('#lbi').src=u;$('#lb').classList.remove('hidden')};
 const openR=i=>{const x=L[i];$('#rdt').textContent=x.jenis==='pengumuman'?'Pengumuman':'Berita';$('#rdd').textContent=tg(x.tanggal);$('#rdh').textContent=x.judul;$('#rdb').textContent=x.isi||'';

@@ -9,10 +9,10 @@
 <script src="assets/config.js"></script></head>
 <body class="bg-gradient-to-br from-sky-100 via-pink-50 to-amber-100 bg-fixed text-slate-800 font-sans">
 <div class="md:flex min-h-screen">
-<aside id="side" class="fixed md:sticky top-0 z-30 h-screen w-64 bg-gradient-to-b from-fuchsia-600 via-indigo-600 to-sky-600 text-white p-4 flex flex-col -translate-x-full md:translate-x-0 transition-transform">
+<aside id="side" class="fixed md:sticky top-0 z-30 h-[100dvh] w-64 bg-gradient-to-b from-fuchsia-600 via-indigo-600 to-sky-600 text-white p-4 flex flex-col -translate-x-full md:translate-x-0 transition-transform">
 <div class="font-bold text-lg mb-1">🏫 SDN Betek I</div><div id="who" class="text-xs opacity-70 mb-4 capitalize"></div>
-<nav id="nav" class="space-y-1 text-sm flex-1"></nav>
+<nav id="nav" class="space-y-1 text-sm flex-1 overflow-y-auto"></nav>
 <a href="index.html" class="px-3 py-2 text-sm opacity-80 hover:opacity-100">🌐 Lihat Web Publik</a><button id="out" class="text-left px-3 py-2 text-sm opacity-80 hover:opacity-100">🚪 Keluar</button></aside>
-<div class="flex-1 min-w-0"><header class="md:hidden sticky top-0 z-20 bg-white border-b h-12 flex items-center px-3"><button id="burger" class="text-xl">☰</button><b class="ml-3">Portal SDN Betek I</b></header>
+<div class="flex-1 min-w-0"><header class="md:hidden sticky top-0 z-20 bg-white border-b h-12 flex items-center px-3"><button id="burger" class="text-xl">☰</button><b class="ml-3 truncate">Portal SDN Betek I</b><button id="out2" class="ml-auto shrink-0 text-sm bg-rose-500 text-white rounded-full px-3 py-1.5 font-medium shadow">🚪 Keluar</button></header>
 <main id="main" class="p-4 md:p-6 max-w-6xl mx-auto"></main></div></div>
 <script src="assets/app.js"></script></body></html>
