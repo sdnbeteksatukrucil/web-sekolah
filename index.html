@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SD Negeri Betek I</title><meta name="theme-color" content="#4f46e5">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="assets/config.js"></script>
+<style>html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.g{background:linear-gradient(135deg,#0ea5e9,#6366f1 55%,#ec4899)}section{scroll-margin-top:4rem}</style></head>
+<body class="bg-slate-50 text-slate-800">
+<header class="fixed top-0 inset-x-0 z-40 bg-white/85 backdrop-blur border-b"><div class="max-w-6xl mx-auto flex items-center gap-3 px-4 h-14">
+<img id="logo" class="h-8 w-8 rounded hidden" alt=""><b id="nm" class="truncate">SD Negeri Betek I</b>
+<nav class="ml-auto hidden md:flex gap-5 text-sm text-slate-600"><a href="#profil">Profil</a><a href="#visi">Visi &amp; Misi</a><a href="#info">Pengumuman</a><a href="#berita">Berita</a><a href="#galeri">Galeri</a><a href="#kontak">Kontak</a></nav>
+<button id="lg" class="ml-auto md:ml-2 text-xs border rounded-full px-3 py-1 hover:bg-slate-100 shrink-0">🔐 Masuk</button></div></header>
+
+<section class="g text-white pt-24 pb-16 px-4 text-center" id="hero"><div class="max-w-3xl mx-auto">
+<img id="hl" class="h-20 w-20 rounded-2xl mx-auto mb-4 hidden bg-white p-1" alt="">
+<h1 id="hn" class="text-3xl md:text-5xl font-extrabold">SD Negeri Betek I</h1><p id="ht" class="mt-3 text-lg opacity-90">Cerdas, Berkarakter, Berprestasi</p>
+<a href="#profil" class="inline-block mt-6 bg-white text-indigo-700 font-semibold rounded-full px-6 py-2 shadow">Kenali Kami</a></div></section>
+
+<main class="max-w-6xl mx-auto px-4 py-10 space-y-14">
+<section id="profil"><h2 class="text-2xl font-bold mb-3">Profil Sekolah</h2><div class="grid md:grid-cols-2 gap-6 items-center"><p id="pf" class="leading-relaxed whitespace-pre-line text-slate-600"></p><img id="hi" class="rounded-2xl shadow w-full object-cover max-h-72 hidden" alt="Foto sekolah"></div></section>
+<section id="visi" class="grid md:grid-cols-2 gap-6"><div class="bg-white rounded-2xl p-6 shadow-sm border"><h2 class="text-xl font-bold mb-2">🎯 Visi</h2><p id="vs" class="text-slate-600 whitespace-pre-line"></p></div><div class="bg-white rounded-2xl p-6 shadow-sm border"><h2 class="text-xl font-bold mb-2">🚀 Misi</h2><ol id="ms" class="list-decimal pl-5 text-slate-600 space-y-1"></ol></div></section>
+<section id="info"><h2 class="text-2xl font-bold mb-3">📢 Pengumuman</h2><div id="pg" class="space-y-3"></div></section>
+<section id="berita"><h2 class="text-2xl font-bold mb-3">📰 Berita Terbaru</h2><div id="br" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div></section>
+<section id="galeri"><h2 class="text-2xl font-bold mb-3">📸 Galeri Kegiatan</h2><div id="gl" class="columns-2 md:columns-3 lg:columns-4 gap-3 [&>img]:mb-3"></div></section>
+<section id="kontak"><h2 class="text-2xl font-bold mb-3">📍 Kontak</h2><div id="kt" class="bg-white rounded-2xl p-6 shadow-sm border space-y-2 text-slate-600"></div></section>
+</main>
+<footer class="text-center text-xs text-slate-400 py-6">© <span id="yr"></span> <span id="fn">SD Negeri Betek I</span></footer>
+
+<div id="lm" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"><form id="lf" class="bg-white rounded-2xl p-6 w-full max-w-sm space-y-3">
+<div class="flex justify-between"><b>Masuk Portal</b><button type="button" id="lx">✕</button></div>
+<input id="u" required placeholder="Username" autocomplete="username" class="w-full border rounded-lg px-3 py-2"><input id="p" type="password" required placeholder="Password" autocomplete="current-password" class="w-full border rounded-lg px-3 py-2">
+<p id="le" class="text-sm text-red-600"></p><button class="w-full bg-indigo-600 text-white rounded-lg py-2 font-medium">Masuk</button><p class="text-xs text-slate-400">Admin, Guru, dan Siswa</p></form></div>
+
+<script>
+const sb=supabase.createClient(CFG.url,CFG.key),$=s=>document.querySelector(s);
+const e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tg=d=>d?new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'';
+$('#yr').textContent=new Date().getFullYear();
+$('#lg').onclick=async()=>{const {data:{session}}=await sb.auth.getSession();session?location='app.html':$('#lm').classList.remove('hidden')};
+$('#lx').onclick=()=>$('#lm').classList.add('hidden');
+$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#le').textContent='';
+ const {error}=await sb.auth.signInWithPassword({email:$('#u').value.trim().toLowerCase()+'@betek1.local',password:$('#p').value});
+ error?$('#le').textContent='Username atau password salah':location='app.html'};
+(async()=>{
+ const [a,b,c]=await Promise.all([sb.from('pengaturan').select('data').eq('key','site').maybeSingle(),sb.from('berita').select('*').order('tanggal',{ascending:false}).limit(30),sb.from('galeri').select('*').order('created_at',{ascending:false}).limit(24)]);
+ const s=a.data?.data||{},nama=s.nama||'SD Negeri Betek I';
+ document.title=nama;$('#nm').textContent=nama;$('#hn').textContent=nama;$('#fn').textContent=nama;$('#ht').textContent=s.tagline||'Cerdas, Berkarakter, Berprestasi';
+ if(s.logo){['#logo','#hl'].forEach(i=>{$(i).src=s.logo;$(i).classList.remove('hidden')})}
+ if(s.hero){$('#hi').src=s.hero;$('#hi').classList.remove('hidden')}
+ $('#pf').textContent=s.profil||'Profil sekolah belum diisi.';$('#vs').textContent=s.visi||'-';
+ $('#ms').innerHTML=(s.misi||'').split('\n').filter(Boolean).map(x=>`<li>${e(x)}</li>`).join('')||'<li>-</li>';
+ const L=b.data||[],pg=L.filter(x=>x.jenis==='pengumuman'),br=L.filter(x=>x.jenis==='berita');
+ $('#pg').innerHTML=pg.map(x=>`<div class="bg-amber-50 border border-amber-200 rounded-xl p-4"><div class="text-xs text-amber-700">${tg(x.tanggal)}</div><b>${e(x.judul)}</b><p class="text-sm text-slate-600 whitespace-pre-line">${e(x.isi)}</p></div>`).join('')||'<p class="text-slate-400">Belum ada pengumuman.</p>';
+ $('#br').innerHTML=br.map(x=>`<article class="bg-white rounded-2xl overflow-hidden shadow-sm border">${x.gambar?`<img loading="lazy" src="${e(x.gambar)}" class="h-40 w-full object-cover" alt="">`:''}<div class="p-4"><div class="text-xs text-slate-400">${tg(x.tanggal)}</div><b>${e(x.judul)}</b><p class="text-sm text-slate-600 mt-1 line-clamp-4 whitespace-pre-line">${e(x.isi)}</p></div></article>`).join('')||'<p class="text-slate-400">Belum ada berita.</p>';
+ $('#gl').innerHTML=(c.data||[]).map(x=>`<img loading="lazy" src="${e(x.url)}" alt="${e(x.judul)}" class="w-full rounded-xl">`).join('')||'<p class="text-slate-400">Belum ada foto.</p>';
+ $('#kt').innerHTML=[s.alamat&&`<p>🏫 ${e(s.alamat)}</p>`,s.telp&&`<p>📞 ${e(s.telp)}</p>`,s.email&&`<p>✉️ ${e(s.email)}</p>`,s.wa&&`<a class="inline-block mt-2 bg-green-600 text-white rounded-full px-4 py-2 text-sm" href="https://wa.me/${e(String(s.wa).replace(/\D/g,''))}">💬 Hubungi via WhatsApp</a>`].filter(Boolean).join('')||'Kontak belum diisi.';
+})();
+</script></body></html>
