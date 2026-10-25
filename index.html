@@ -53,9 +53,9 @@ let L=[];$('#yr').textContent=new Date().getFullYear();
 $('#lg').onclick=async()=>{const {data:{session}}=await sb.auth.getSession();session?location='app.html':($('#lf').reset(),$('#lm').classList.remove('hidden'))};
 if(location.search.includes('out=1'))history.replaceState(null,'','index.html');
 $('#lx').onclick=()=>$('#lm').classList.add('hidden');
-$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#le').textContent='';const {error}=await sb.auth.signInWithPassword({email:$('#u').value.trim().toLowerCase().replace(/@.*$/,'')+'@betek1.local',password:$('#p').value});
+$('#lf').onsubmit=async ev=>{ev.preventDefault();$('#le').textContent='';const {data:sd,error}=await sb.auth.signInWithPassword({email:$('#u').value.trim().toLowerCase().replace(/@.*$/,'')+'@betek1.local',password:$('#p').value});
  if(error){$('#le').textContent=error.message==='Invalid login credentials'?'Username atau password salah (atau akun belum dibuat)':'Gagal masuk: '+error.message;return}
- const {data:pr}=await sb.from('profiles').select('role').maybeSingle();if(!pr){$('#le').textContent='Akun ada tetapi belum terdaftar sebagai guru/siswa (profil kosong). Hubungi admin.';await sb.auth.signOut();return}
+ const {data:pr}=await sb.from('profiles').select('role').eq('id',sd.user.id).maybeSingle();if(!pr){$('#le').textContent='Akun ada tetapi belum terdaftar sebagai guru/siswa (profil kosong). Hubungi admin.';await sb.auth.signOut();return}
  location='app.html'};
 const lock=v=>document.body.style.overflow=v?'hidden':'';
 const zoom=u=>{if(!u)return;$('#lbi').src=u;$('#lb').classList.remove('hidden')};
